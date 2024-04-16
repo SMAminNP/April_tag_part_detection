@@ -6,32 +6,20 @@
   <arg name="camera_name" default="/rs_camera_1/color" />
   <arg name="image_topic" default="image_rect" />
   <arg name="info_topic" default="camera_info" />
-  <arg name="stand_alone" default="true" />
-  
-  <arg name="part_1" default="part_1"/>
-  <arg name="configuration_1" default="part_1.yaml"/>
-
-  <arg name="part_2" default="part_2"/>
-  <arg name="configuration_2" default="part_2.yaml"/>
-
-  <arg name="part_3" default="part_3"/>
-  <arg name="configuration_3" default="part_3.yaml"/>
-
-  <arg name="part_4" default="part_4"/>
-  <arg name="configuration_4" default="part_4.yaml"/>
-
+  <arg name="stand_alone" default="true" />  
   <arg name="rviz" default="true"/>
-
-
 
    <!-- Static TFs for testing -->
   <group if="$(arg stand_alone)">
       <node pkg="tf2_ros" type="static_transform_publisher" name="part_1_tf"/>
-      <!--node pkg="tf2_ros" type="static_transform_publisher" name="part_2_tf"/-->
-      <!--node pkg="tf2_ros" type="static_transform_publisher" name="part_3_tf"/-->
-      <!--node pkg="tf2_ros" type="static_transform_publisher" name="part_4_tf"/-->
+      <node pkg="tf2_ros" type="static_transform_publisher" name="part_2_tf"/>
+      <node pkg="tf2_ros" type="static_transform_publisher" name="part_3_tf"/>
+      <node pkg="tf2_ros" type="static_transform_publisher" name="part_4_tf"/>
+      <node pkg="tf2_ros" type="static_transform_publisher" name="tag_10_to_part2" args="0.05 0.0 0.0 0 0.0 0.0 /tag_10 /part_2"/>
+      <node pkg="tf2_ros" type="static_transform_publisher" name="tag_11_to_part3" args="0.05 0.0 0.0 0 0.0 0.0 /tag_11 /part_3"/>
+      <node pkg="tf2_ros" type="static_transform_publisher" name="tag_12_to_part4" args="0.05 0.0 0.0 0 0.0 0.0 /tag_12 /part_4"/>
+      <node pkg="tf2_ros" type="static_transform_publisher" name="tag_13_to_part1" args="0.05 0.0 0.0 0 0.0 0.0 /tag_13 /part_1"/>
   </group>
-
 
  <!-- RealSense -->
   <group if="$(arg realsense)">
@@ -47,10 +35,6 @@
     <arg name="image_topic" value="$(arg image_topic)"/>
     <arg name="info_topic" value="$(arg info_topic)"/>
   </include>
-
-  <!-- April Tag to Fixture Pose Services Client -->
-  <!--rosparam file="$(find part_detection)/config/tag_2_part_multiple.yaml" command="load"/-->
-  <node pkg="part_detection" name="tf_try" type="tf_try.py" output="screen"/>
 
   <!-- RViz -->
   <group if="$(arg rviz)">

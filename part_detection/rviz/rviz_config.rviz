@@ -96,7 +96,7 @@ Visualization Manager:
           Value: true
         rs_camera_1_usb_plug_link:
           Value: true
-        tag_10:
+        tag_13:
           Value: true
       Marker Alpha: 1
       Marker Scale: 1
@@ -110,7 +110,7 @@ Visualization Manager:
             rs_camera_1_link:
               rs_camera_1_aligned_depth_to_color_frame:
                 rs_camera_1_color_optical_frame:
-                  tag_10:
+                  tag_13:
                     {}
               rs_camera_1_color_frame:
                 {}
@@ -155,7 +155,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 11.038719177246094
+      Distance: 13.257352828979492
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1

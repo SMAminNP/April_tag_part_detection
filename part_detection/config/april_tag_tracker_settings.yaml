@@ -1,8 +1,8 @@
 # Useful: https://optitag.io/blogs/news/using-your-apriltag-with-ros
 tag_family:        'tag16h5'
 tag_border:        1 
-tag_threads:       2 
-tag_decimate:      1.0 
+tag_threads:       5 
+tag_decimate:      0.5 
 tag_blur:          0.0 
 tag_refine_edges:  1 
 tag_refine_decode: 0 
