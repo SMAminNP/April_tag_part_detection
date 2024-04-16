@@ -1,0 +1,19 @@
+tag_to_part:
+  node_rate: 1 #0.5 #Hz
+  input_frame_rate: 15 #Hz
+  time_to_buffer: 3 #10 #sec
+  # Be sure your launch file namespace includes nodes ~/fixture_n/fixture_pose_setter.py for each fixture
+  tags:
+    tag_0:
+      tag_id: 10
+      part_name: part_1
+  #  tag_1:
+  #    # For bundles use the mother tag or first tag in the list
+  #    tag_id: 11
+  #    part_name: part_2
+  #  tag_2:
+  #    tag_id: 12
+  #    part_name: part_3
+  #  tag_3:
+  #    tag_id: 13
+  #    part_name: part_4

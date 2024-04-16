@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <arg name="realsense" default="true" />
+  <arg name="device_type" default="d415" />
+
+  <arg name="camera_name" default="/rs_camera_1/color" />
+  <arg name="image_topic" default="image_rect" />
+  <arg name="info_topic" default="camera_info" />
+  <arg name="stand_alone" default="true" />
+  
+  <arg name="part_1" default="part_1"/>
+  <arg name="configuration_1" default="part_1.yaml"/>
+
+  <arg name="part_2" default="part_2"/>
+  <arg name="configuration_2" default="part_2.yaml"/>
+
+  <arg name="part_3" default="part_3"/>
+  <arg name="configuration_3" default="part_3.yaml"/>
+
+  <arg name="part_4" default="part_4"/>
+  <arg name="configuration_4" default="part_4.yaml"/>
+
+  <arg name="rviz" default="true"/>
+
+
+
+   <!-- Static TFs for testing -->
+  <group if="$(arg stand_alone)">
+      <node pkg="tf2_ros" type="static_transform_publisher" name="part_1_tf"/>
+      <!--node pkg="tf2_ros" type="static_transform_publisher" name="part_2_tf"/-->
+      <!--node pkg="tf2_ros" type="static_transform_publisher" name="part_3_tf"/-->
+      <!--node pkg="tf2_ros" type="static_transform_publisher" name="part_4_tf"/-->
+  </group>
+
+
+ <!-- RealSense -->
+  <group if="$(arg realsense)">
+    <include file="$(find realsense_launch)/launch/realsense.launch">
+      <arg name="device_type" value="$(arg device_type)"/>
+      <arg name="rviz" value="false" />
+    </include>
+  </group>
+
+  <!-- April Tag Tracker -->
+  <include file="$(find part_detection)/launch/tag_tracker.launch">
+    <arg name="camera_name" value="$(arg camera_name)"/>
+    <arg name="image_topic" value="$(arg image_topic)"/>
+    <arg name="info_topic" value="$(arg info_topic)"/>
+  </include>
+
+  <!-- April Tag to Fixture Pose Services Client -->
+  <!--rosparam file="$(find part_detection)/config/tag_2_part_multiple.yaml" command="load"/-->
+  <node pkg="part_detection" name="tf_try" type="tf_try.py" output="screen"/>
+
+  <!-- RViz -->
+  <group if="$(arg rviz)">
+    <node type="rviz" name="rviz" pkg="rviz" args="-d $(find part_detection)/rviz/rviz_config.rviz" />
+  </group>
+
+</launch>
