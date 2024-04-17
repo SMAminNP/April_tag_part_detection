@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-  <!-- set to value="gdbserver localhost:10000" for remote debugging -->
-  <arg name="launch_prefix" default="" />
 
   <!-- configure camera input -->
   <arg name="camera_name" default="/rs_camera_1/color" />
@@ -10,7 +8,7 @@
   <arg name="queue_size" default="1" />
 
   <!-- apriltag_ros continuous detection node -->
-  <node pkg="apriltag_ros" type="apriltag_ros_continuous_node" name="apriltag_ros_continuous_node" clear_params="true" output="screen" launch-prefix="$(arg launch_prefix)">
+  <node pkg="apriltag_ros" type="apriltag_ros_continuous_node" name="apriltag_ros_continuous_node" clear_params="true" output="screen">
     <!-- Remap topics from those used in code to those on the ROS network -->
     <remap from="image_rect" to="$(arg camera_name)/$(arg image_topic)" />
     <remap from="camera_info" to="$(arg camera_name)/$(arg info_topic)" />
