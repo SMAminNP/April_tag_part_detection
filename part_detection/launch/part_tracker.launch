@@ -21,13 +21,17 @@
       <node pkg="tf2_ros" type="static_transform_publisher" name="tag_13_to_part1" args="0.05 0.0 0.0 0 0.0 0.0 /tag_13 /part_1"/>
   </group>
 
+<!-- Object Detection-->
+<node pkg="part_detection" name="object_detector_ros" type="object_detector_ros.py"> </node>
+<node pkg="part_detection" name="TF_publisher" type="TF_publisher.py" output="screen"> </node>
+
  <!-- RealSense -->
-  <group if="$(arg realsense)">
-    <include file="$(find realsense_launch)/launch/realsense.launch">
-      <arg name="device_type" value="$(arg device_type)"/>
-      <arg name="rviz" value="false" />
-    </include>
-  </group>
+ <group if="$(arg realsense)">
+  <include file="$(find realsense_launch)/launch/realsense.launch">
+    <arg name="device_type" value="$(arg device_type)"/>
+    <arg name="rviz" value="false" />
+  </include>
+</group>
 
   <!-- April Tag Tracker -->
   <include file="$(find part_detection)/launch/tag_tracker.launch">
