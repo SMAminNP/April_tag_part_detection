@@ -23,7 +23,7 @@
 
 <!-- Object Detection-->
 <node pkg="part_detection" name="object_detector_ros" type="object_detector_ros.py"> </node>
-<node pkg="part_detection" name="TF_publisher" type="TF_publisher.py" output="screen"> </node>
+<node pkg="part_detection" name="Kalman_filter" type="Kalman_filter.py" output="screen"> </node>
 
  <!-- RealSense -->
  <group if="$(arg realsense)">
