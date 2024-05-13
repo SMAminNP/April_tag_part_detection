@@ -20,8 +20,8 @@ class ObjectDetectorROS:
         self.camera_info = None
 
         rospy.init_node('object_detector_ros')
-        rospy.Subscriber('/rs_camera_1/color/image_raw', Image, self.color_image_callback) # Update with your color image topic
-        rospy.Subscriber('/rs_camera_1/depth/image_rect_raw', Image, self.depth_image_callback) # Update with your depth image topic
+        rospy.Subscriber('/rs_camera_1/color/image_rect', Image, self.color_image_callback) # Update with your color image topic
+        rospy.Subscriber('/rs_camera_1/depth/registered/image_rect_raw', Image, self.depth_image_callback) # Update with your depth image topic
         rospy.Subscriber('/rs_camera_1/depth/camera_info', CameraInfo, self.camera_info_callback) # Update with your camera info topic
 
         self.object_coordinates_pub = rospy.Publisher('/object_coordinates', ObjectCoordinates, queue_size=10)
@@ -54,12 +54,12 @@ class ObjectDetectorROS:
                         y_center = int((y1 + y2) / 2)
 
                         # Get depth value at object center
-                        depth = self.depth_image[y_center, x_center] * self.camera_info.K[0] * 0.00005  # Convert depth to meters
+                        depth = self.depth_image[y_center, x_center] * 0.013  # Convert depth to meters
 
                         # Calculate world coordinates using camera intrinsic parameters
                         x_world = (x_center - self.camera_info.K[2]) * depth / self.camera_info.K[0]
                         y_world = (y_center - self.camera_info.K[5]) * depth / self.camera_info.K[4]
-                        z_world = depth
+                        z_world = depth 
 
                         object_coordinates.extend([x_world, y_world, z_world])
 
@@ -71,9 +71,9 @@ class ObjectDetectorROS:
                 object_coordinates_msg.coordinates = object_coordinates
                 self.object_coordinates_pub.publish(object_coordinates_msg)
 
-                cv2.imshow("Color Image", self.color_image)
-                cv2.imshow("Depth Image", self.depth_image)
-                cv2.waitKey(1)
+                #cv2.imshow("Color Image", self.color_image)
+                #cv2.imshow("Depth Image", self.depth_image)
+                #cv2.waitKey(1)
 
             rate.sleep()
 

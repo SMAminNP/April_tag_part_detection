@@ -11,19 +11,17 @@
 
    <!-- Static TFs for testing -->
   <group if="$(arg stand_alone)">
-      <node pkg="tf2_ros" type="static_transform_publisher" name="part_1_tf"/>
-      <node pkg="tf2_ros" type="static_transform_publisher" name="part_2_tf"/>
-      <node pkg="tf2_ros" type="static_transform_publisher" name="part_3_tf"/>
-      <node pkg="tf2_ros" type="static_transform_publisher" name="part_4_tf"/>
       <node pkg="tf2_ros" type="static_transform_publisher" name="tag_10_to_part2" args="0.05 0.0 0.0 0 0.0 0.0 /tag_10 /part_2"/>
-      <node pkg="tf2_ros" type="static_transform_publisher" name="tag_11_to_part3" args="0.05 0.0 0.0 0 0.0 0.0 /tag_11 /part_3"/>
-      <node pkg="tf2_ros" type="static_transform_publisher" name="tag_12_to_part4" args="0.05 0.0 0.0 0 0.0 0.0 /tag_12 /part_4"/>
-      <node pkg="tf2_ros" type="static_transform_publisher" name="tag_13_to_part1" args="0.05 0.0 0.0 0 0.0 0.0 /tag_13 /part_1"/>
+      <!--node pkg="tf2_ros" type="static_transform_publisher" name="tag_11_to_part3" args="0.05 0.0 0.0 0 0.0 0.0 /tag_11 /part_3"/> -->
+      <!--node pkg="tf2_ros" type="static_transform_publisher" name="tag_12_to_part4" args="0.05 0.0 0.0 0 0.0 0.0 /tag_12 /part_4"/> -->
+      <!--node pkg="tf2_ros" type="static_transform_publisher" name="tag_13_to_part1" args="0.05 0.0 0.0 0 0.0 0.0 /tag_13 /part_1"/> -->
   </group>
 
 <!-- Object Detection-->
 <node pkg="part_detection" name="object_detector_ros" type="object_detector_ros.py"> </node>
-<node pkg="part_detection" name="Kalman_filter" type="Kalman_filter.py" output="screen"> </node>
+<node pkg="part_detection" name="Coordinate_Averager" type="Coordinate_Averager.py"> </node> 
+<node pkg="part_detection" name="TF_publisher" type="TF_publisher.py" output="screen"> </node> 
+<node pkg="part_detection" name="smooth_coordinate" type="smooth_coordinate.py"> </node> 
 
  <!-- RealSense -->
  <group if="$(arg realsense)">
