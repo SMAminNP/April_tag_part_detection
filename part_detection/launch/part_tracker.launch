@@ -18,10 +18,12 @@
   </group>
 
 <!-- Object Detection-->
-<node pkg="part_detection" name="object_detector_ros" type="object_detector_ros.py"> </node>
+<node pkg="part_detection" name="Test3" type="Test3.py"> </node> 
+<!-- node pkg="part_detection" name="Annonated_img" type="Annonated_img.py"> </node> -->
 <node pkg="part_detection" name="Coordinate_Averager" type="Coordinate_Averager.py"> </node> 
-<node pkg="part_detection" name="TF_publisher" type="TF_publisher.py" output="screen"> </node> 
-<node pkg="part_detection" name="smooth_coordinate" type="smooth_coordinate.py"> </node> 
+<node pkg="part_detection" name="TF_publisher" type="TF_publisher.py" output="screen"> </node>
+<node pkg="part_detection" name="smooth_coordinate" type="smooth_coordinate.py"> </node>
+<!--node pkg="part_detection" name="robot_mover" type="robot_mover.py"> </node> -->
 
  <!-- RealSense -->
  <group if="$(arg realsense)">

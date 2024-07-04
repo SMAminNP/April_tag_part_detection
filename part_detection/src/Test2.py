@@ -11,7 +11,7 @@ import cv2
 class ObjectDetectorROS:
     def __init__(self):
         self.bridge = CvBridge()
-        self.model_path = '/home/amin/YOLO/runs/detect/train/weights/best.pt'  # Update with your model path
+        self.model_path = '/home/amin/YOLO/runs/detect/train/weights/bestC.pt'  # Update with your model path
         self.threshold = 0.5
         self.model = YOLO(self.model_path)
 
@@ -35,12 +35,12 @@ class ObjectDetectorROS:
     def camera_info_callback(self, msg):
         self.camera_info = msg
 
-    def run_detection(self):
+    def run_detection(self, actual_length):
         rate = rospy.Rate(10)  # Adjust the rate according to your needs
 
         while not rospy.is_shutdown():
             if self.color_image is not None and self.depth_image is not None and self.camera_info is not None:
-                
+                # Run YOLO detection on the color image
                 results = self.model(self.color_image)[0]
 
                 object_coordinates = []
@@ -61,6 +61,10 @@ class ObjectDetectorROS:
                         y_world = (y_center - self.camera_info.K[5]) * depth / self.camera_info.K[4]
                         z_world = depth 
 
+                        # Scale the coordinates based on the actual size of the screw
+                        x_world *= actual_length / x2  
+                        y_world *= actual_length / y2  
+
                         object_coordinates.extend([x_world, y_world, z_world])
 
                         rospy.loginfo("Object detected: %s at depth: %.2f meters, world coordinates: (%.2f, %.2f, %.2f)",
@@ -71,11 +75,16 @@ class ObjectDetectorROS:
                 object_coordinates_msg.coordinates = object_coordinates
                 self.object_coordinates_pub.publish(object_coordinates_msg)
 
+                #cv2.imshow("Color Image", self.color_image)
+                #cv2.imshow("Depth Image", self.depth_image)
+                #cv2.waitKey(1)
+
             rate.sleep()
 
 if __name__ == '__main__':
     try:
+        actual_screw_length = 0.02 
         detector = ObjectDetectorROS()
-        detector.run_detection()
+        detector.run_detection(actual_screw_length)
     except rospy.ROSInterruptException:
         pass

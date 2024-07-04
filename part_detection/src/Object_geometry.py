@@ -6,6 +6,7 @@ from cv_bridge import CvBridge
 import numpy as np
 from ultralytics import YOLO
 from part_detection.msg import ObjectCoordinates
+from geometry_msgs.msg import PointStamped
 import cv2
 
 class ObjectDetectorROS:
@@ -25,6 +26,7 @@ class ObjectDetectorROS:
         rospy.Subscriber('/rs_camera_1/depth/camera_info', CameraInfo, self.camera_info_callback) # Update with your camera info topic
 
         self.object_coordinates_pub = rospy.Publisher('/object_coordinates', ObjectCoordinates, queue_size=10)
+        self.screw_pub = rospy.Publisher('/detected_screws', PointStamped, queue_size=10)
 
     def color_image_callback(self, msg):
         self.color_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding="bgr8")
@@ -40,7 +42,7 @@ class ObjectDetectorROS:
 
         while not rospy.is_shutdown():
             if self.color_image is not None and self.depth_image is not None and self.camera_info is not None:
-                
+                # Run YOLO detection on the color image
                 results = self.model(self.color_image)[0]
 
                 object_coordinates = []
@@ -48,7 +50,7 @@ class ObjectDetectorROS:
                 for result in results.boxes.data.tolist():
                     x1, y1, x2, y2, score, class_id = result
 
-                    if score > self.threshold:
+                    if score > self.threshold and results.names[int(class_id)] == 'screw':
                         # Calculate object center coordinates in pixel space
                         x_center = int((x1 + x2) / 2)
                         y_center = int((y1 + y2) / 2)
@@ -59,12 +61,22 @@ class ObjectDetectorROS:
                         # Calculate world coordinates using camera intrinsic parameters
                         x_world = (x_center - self.camera_info.K[2]) * depth / self.camera_info.K[0]
                         y_world = (y_center - self.camera_info.K[5]) * depth / self.camera_info.K[4]
-                        z_world = depth 
+                        z_world = depth
 
                         object_coordinates.extend([x_world, y_world, z_world])
 
-                        rospy.loginfo("Object detected: %s at depth: %.2f meters, world coordinates: (%.2f, %.2f, %.2f)",
-                                      results.names[int(class_id)], depth, x_world, y_world, z_world)
+                        rospy.loginfo("Screw detected at depth: %.2f meters, world coordinates: (%.2f, %.2f, %.2f)",
+                                      depth, x_world, y_world, z_world)
+
+                        # Publish screw position as geometry_msgs/PointStamped
+                        screw_point = PointStamped()
+                        screw_point.header.stamp = rospy.Time.now()
+                        screw_point.header.frame_id = "rs_camera_1_link"  # Adjust the frame_id according to your setup
+                        screw_point.point.x = x_world
+                        screw_point.point.y = y_world
+                        screw_point.point.z = z_world
+
+                        self.screw_pub.publish(screw_point)
 
                 # Publish object coordinates
                 object_coordinates_msg = ObjectCoordinates()
